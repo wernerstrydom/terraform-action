@@ -10,7 +10,7 @@ This workflow is based on the [Typescript Action](https://github.com/actions/typ
 
 ### Pre-requisites
 
-Create a workflow `.yml` file in your repositories `.github/workflows` directory. An [example workflow](#example) is available below.
+Create a workflow `.yml` file in your repositories `.github/workflows` directory. An [example workflow](#examples) is available below.
 
 ### Inputs
 
@@ -85,7 +85,7 @@ jobs:
     
         - name: Terraform Plan and Apply
           id: terraform
-          uses: wernerstrydom/terraform-action@v1
+          uses: phaka/terraform-action@v1-beta
           with:
             command: apply
             workspace: ci-${{ github.repository_owner_id }}-${{ github.repository_id }}-${{ github.event.pull_request.number }}
@@ -131,7 +131,7 @@ jobs:
           uses: actions/checkout@v2
     
         - name: Terraform Destroy
-          uses: wernerstrydom/terraform-action@v1
+          uses: phaka/terraform-action@v1-beta
           with:
             command: destroy
             workspace: ci-${{ github.repository_owner_id }}-${{ github.repository_id }}-${{ github.event.pull_request.number }}
