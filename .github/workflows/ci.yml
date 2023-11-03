@@ -1,0 +1,109 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install Dependencies
+        id: npm-ci
+        run: npm ci
+
+      - name: Check Format
+        id: npm-format-check
+        run: npm run format:check
+
+      - name: Lint
+        id: npm-lint
+        run: npm run lint
+
+      - name: Test
+        id: npm-ci-test
+        run: npm run ci-test
+
+  apply-test-1:
+    name: Apply Test1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      - name: Test Local Action
+        id: test
+        uses: ./
+        with:
+          working-directory: "./examples/test1"
+          command: apply
+
+  plan-test-1:
+    name: Plan Test1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      - name: Test Local Action
+        id: test
+        uses: ./
+        with:
+          working-directory: "./examples/test1"
+          command: plan
+
+  apply-test-2:
+    name: Apply Test2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      - name: Test Local Action
+        id: test
+        uses: ./
+        with:
+          working-directory: "./examples/test2"
+          command: apply
+
+      - name: Print Outputs
+        id: output
+        run: |
+          echo "Add: ${{ steps.test.outputs.to-add }}"
+          echo "Change: ${{ steps.test.outputs.to-change }}"
+          echo "Destroy: ${{ steps.test.outputs.to-destroy }}"
+          echo "Import: ${{ steps.test.outputs.to-import }}"
+          echo 'Random: ${{ steps.test.outputs.terraform-random }}'

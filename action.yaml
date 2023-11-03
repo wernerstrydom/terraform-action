@@ -1,0 +1,42 @@
+name: 'Phaka Terraform Action'
+description: 'An action that wraps Terraform and provides a few extra features'
+author: 'Werner Strydom'
+
+branding:
+  icon: 'heart'
+  color: 'red'
+
+inputs:
+  working-directory:
+    description: "The location where the terraform files are stored"
+    required: false
+    default: "."
+  workspace:
+    description: "The name of the workspace to use"
+    required: false
+    default: "default"
+  check-format:
+    description: 'Whether to check the formatting of the Terraform files'
+    required: false
+    default: 'false'
+  validate-module:
+    description: 'Whether to validate the Terraform module'
+    required: false
+    default: 'true'
+  command:
+    description: 'The Terraform command to run (plan, apply, destroy)'
+    required: true
+
+outputs:
+  to-add:
+    description: "Number of resources to add"
+  to-change:
+    description: "Number of resources to change"
+  to-destroy:
+    description: "Number of resources to destroy"
+  to-import:
+    description: "Number of resources to import"
+
+runs:
+  using: node20
+  main: dist/index.js
